@@ -1,0 +1,232 @@
+Hi
+I encountered a problem during the installation of kubernetes，It was successful the first time I executed init, but then I imported the cilium network, and its address conflicted with that of my host. Then I executed kubeadm reset --force, and then restarted kubeadm init after recovery. An error was encountered:
+
+```
+root@kmaster1:~# kubeadm init --config Kubernetes-cluster.yaml --v=5
+I0526 21:20:04.047350    1636 initconfiguration.go:255] loading configuration from "Kubernetes-cluster.yaml"
+[init] Using Kubernetes version: v1.28.0
+[preflight] Running pre-flight checks
+I0526 21:20:04.052693    1636 checks.go:563] validating Kubernetes and kubeadm version
+I0526 21:20:04.052766    1636 checks.go:168] validating if the firewall is enabled and active
+I0526 21:20:04.058728    1636 checks.go:203] validating availability of port 6443
+I0526 21:20:04.059032    1636 checks.go:203] validating availability of port 10259
+I0526 21:20:04.059127    1636 checks.go:203] validating availability of port 10257
+I0526 21:20:04.059201    1636 checks.go:280] validating the existence of file /etc/kubernetes/manifests/kube-apiserver.yaml
+I0526 21:20:04.059263    1636 checks.go:280] validating the existence of file /etc/kubernetes/manifests/kube-controller-manager.yaml
+I0526 21:20:04.059327    1636 checks.go:280] validating the existence of file /etc/kubernetes/manifests/kube-scheduler.yaml
+I0526 21:20:04.059389    1636 checks.go:280] validating the existence of file /etc/kubernetes/manifests/etcd.yaml
+I0526 21:20:04.059452    1636 checks.go:430] validating if the connectivity type is via proxy or direct
+I0526 21:20:04.059527    1636 checks.go:469] validating http connectivity to first IP address in the CIDR
+I0526 21:20:04.059602    1636 checks.go:469] validating http connectivity to first IP address in the CIDR
+I0526 21:20:04.059663    1636 checks.go:104] validating the container runtime
+I0526 21:20:04.080906    1636 checks.go:639] validating whether swap is enabled or not
+I0526 21:20:04.081120    1636 checks.go:370] validating the presence of executable crictl
+I0526 21:20:04.081142    1636 checks.go:370] validating the presence of executable conntrack
+I0526 21:20:04.081149    1636 checks.go:370] validating the presence of executable ip
+I0526 21:20:04.081157    1636 checks.go:370] validating the presence of executable iptables
+I0526 21:20:04.081220    1636 checks.go:370] validating the presence of executable mount
+I0526 21:20:04.081228    1636 checks.go:370] validating the presence of executable nsenter
+I0526 21:20:04.081235    1636 checks.go:370] validating the presence of executable ebtables
+I0526 21:20:04.081242    1636 checks.go:370] validating the presence of executable ethtool
+I0526 21:20:04.081250    1636 checks.go:370] validating the presence of executable socat
+I0526 21:20:04.081257    1636 checks.go:370] validating the presence of executable tc
+I0526 21:20:04.081263    1636 checks.go:370] validating the presence of executable touch
+I0526 21:20:04.081270    1636 checks.go:516] running all checks
+I0526 21:20:04.085592    1636 checks.go:401] checking whether the given node name is valid and reachable using net.LookupHost
+I0526 21:20:04.085672    1636 checks.go:605] validating kubelet version
+I0526 21:20:04.115741    1636 checks.go:130] validating if the "kubelet" service is enabled and active
+I0526 21:20:04.122203    1636 checks.go:203] validating availability of port 10250
+I0526 21:20:04.122246    1636 checks.go:329] validating the contents of file /proc/sys/net/bridge/bridge-nf-call-iptables
+I0526 21:20:04.122282    1636 checks.go:329] validating the contents of file /proc/sys/net/ipv4/ip_forward
+I0526 21:20:04.122289    1636 checks.go:203] validating availability of port 2379
+I0526 21:20:04.122300    1636 checks.go:203] validating availability of port 2380
+I0526 21:20:04.122306    1636 checks.go:243] validating the existence and emptiness of directory /var/lib/etcd
+[preflight] Pulling images required for setting up a Kubernetes cluster
+[preflight] This might take a minute or two, depending on the speed of your internet connection
+[preflight] You can also perform this action in beforehand using 'kubeadm config images pull'
+I0526 21:20:04.122362    1636 checks.go:828] using image pull policy: IfNotPresent
+I0526 21:20:04.139018    1636 checks.go:846] image exists: registry.aliyuncs.com/google_containers/kube-apiserver:v1.28.0
+I0526 21:20:04.154339    1636 checks.go:846] image exists: registry.aliyuncs.com/google_containers/kube-controller-manager:v1.28.0
+I0526 21:20:04.169627    1636 checks.go:846] image exists: registry.aliyuncs.com/google_containers/kube-scheduler:v1.28.0
+I0526 21:20:04.185353    1636 checks.go:846] image exists: registry.aliyuncs.com/google_containers/kube-proxy:v1.28.0
+W0526 21:20:04.199610    1636 checks.go:835] detected that the sandbox image "registry.aliyuncs.com/google_containers/pause:3.8" of the container runtime is inconsistent with that used by kubeadm. It is recommended that using "registry.aliyuncs.com/google_containers/pause:3.9" as the CRI sandbox image.
+I0526 21:20:04.214007    1636 checks.go:846] image exists: registry.aliyuncs.com/google_containers/pause:3.9
+I0526 21:20:04.228887    1636 checks.go:846] image exists: registry.aliyuncs.com/google_containers/etcd:3.5.9-0
+I0526 21:20:04.242865    1636 checks.go:846] image exists: registry.aliyuncs.com/google_containers/coredns:v1.10.1
+[certs] Using certificateDir folder "/etc/kubernetes/pki"
+I0526 21:20:04.243101    1636 certs.go:112] creating a new certificate authority for ca
+[certs] Generating "ca" certificate and key
+I0526 21:20:04.281115    1636 certs.go:519] validating certificate period for ca certificate
+[certs] Generating "apiserver" certificate and key
+[certs] apiserver serving cert is signed for DNS names [kmaster1 kubernetes kubernetes.default kubernetes.default.svc kubernetes.default.svc.cluster.local] and IPs [10.96.0.1 10.0.0.21]
+[certs] Generating "apiserver-kubelet-client" certificate and key
+I0526 21:20:04.377578    1636 certs.go:112] creating a new certificate authority for front-proxy-ca
+[certs] Generating "front-proxy-ca" certificate and key
+I0526 21:20:04.413476    1636 certs.go:519] validating certificate period for front-proxy-ca certificate
+[certs] Generating "front-proxy-client" certificate and key
+I0526 21:20:04.486432    1636 certs.go:112] creating a new certificate authority for etcd-ca
+[certs] Generating "etcd/ca" certificate and key
+I0526 21:20:04.656813    1636 certs.go:519] validating certificate period for etcd/ca certificate
+[certs] Generating "etcd/server" certificate and key
+[certs] etcd/server serving cert is signed for DNS names [kmaster1 localhost] and IPs [10.0.0.21 127.0.0.1 ::1]
+[certs] Generating "etcd/peer" certificate and key
+[certs] etcd/peer serving cert is signed for DNS names [kmaster1 localhost] and IPs [10.0.0.21 127.0.0.1 ::1]
+[certs] Generating "etcd/healthcheck-client" certificate and key
+[certs] Generating "apiserver-etcd-client" certificate and key
+I0526 21:20:04.932773    1636 certs.go:78] creating new public/private key files for signing service account users
+[certs] Generating "sa" key and public key
+[kubeconfig] Using kubeconfig folder "/etc/kubernetes"
+I0526 21:20:04.976258    1636 kubeconfig.go:103] creating kubeconfig file for admin.conf
+[kubeconfig] Writing "admin.conf" kubeconfig file
+I0526 21:20:05.017087    1636 kubeconfig.go:103] creating kubeconfig file for kubelet.conf
+[kubeconfig] Writing "kubelet.conf" kubeconfig file
+I0526 21:20:05.111024    1636 kubeconfig.go:103] creating kubeconfig file for controller-manager.conf
+[kubeconfig] Writing "controller-manager.conf" kubeconfig file
+I0526 21:20:05.180074    1636 kubeconfig.go:103] creating kubeconfig file for scheduler.conf
+[kubeconfig] Writing "scheduler.conf" kubeconfig file
+[etcd] Creating static Pod manifest for local etcd in "/etc/kubernetes/manifests"
+I0526 21:20:05.236578    1636 local.go:65] [etcd] wrote Static Pod manifest for a local etcd member to "/etc/kubernetes/manifests/etcd.yaml"
+[control-plane] Using manifest folder "/etc/kubernetes/manifests"
+[control-plane] Creating static Pod manifest for "kube-apiserver"
+I0526 21:20:05.236614    1636 manifests.go:102] [control-plane] getting StaticPodSpecs
+I0526 21:20:05.236688    1636 certs.go:519] validating certificate period for CA certificate
+I0526 21:20:05.236719    1636 manifests.go:128] [control-plane] adding volume "ca-certs" for component "kube-apiserver"
+I0526 21:20:05.236729    1636 manifests.go:128] [control-plane] adding volume "etc-ca-certificates" for component "kube-apiserver"
+I0526 21:20:05.236732    1636 manifests.go:128] [control-plane] adding volume "k8s-certs" for component "kube-apiserver"
+I0526 21:20:05.236744    1636 manifests.go:128] [control-plane] adding volume "usr-local-share-ca-certificates" for component "kube-apiserver"
+I0526 21:20:05.236748    1636 manifests.go:128] [control-plane] adding volume "usr-share-ca-certificates" for component "kube-apiserver"
+I0526 21:20:05.237046    1636 manifests.go:157] [control-plane] wrote static Pod manifest for component "kube-apiserver" to "/etc/kubernetes/manifests/kube-apiserver.yaml"
+[control-plane] Creating static Pod manifest for "kube-controller-manager"
+I0526 21:20:05.237065    1636 manifests.go:102] [control-plane] getting StaticPodSpecs
+I0526 21:20:05.237147    1636 manifests.go:128] [control-plane] adding volume "ca-certs" for component "kube-controller-manager"
+I0526 21:20:05.237160    1636 manifests.go:128] [control-plane] adding volume "etc-ca-certificates" for component "kube-controller-manager"
+I0526 21:20:05.237165    1636 manifests.go:128] [control-plane] adding volume "flexvolume-dir" for component "kube-controller-manager"
+I0526 21:20:05.237169    1636 manifests.go:128] [control-plane] adding volume "k8s-certs" for component "kube-controller-manager"
+I0526 21:20:05.237173    1636 manifests.go:128] [control-plane] adding volume "kubeconfig" for component "kube-controller-manager"
+I0526 21:20:05.237177    1636 manifests.go:128] [control-plane] adding volume "usr-local-share-ca-certificates" for component "kube-controller-manager"
+I0526 21:20:05.237181    1636 manifests.go:128] [control-plane] adding volume "usr-share-ca-certificates" for component "kube-controller-manager"
+I0526 21:20:05.237435    1636 manifests.go:157] [control-plane] wrote static Pod manifest for component "kube-controller-manager" to "/etc/kubernetes/manifests/kube-controller-manager.yaml"
+[control-plane] Creating static Pod manifest for "kube-scheduler"
+I0526 21:20:05.237452    1636 manifests.go:102] [control-plane] getting StaticPodSpecs
+I0526 21:20:05.237533    1636 manifests.go:128] [control-plane] adding volume "kubeconfig" for component "kube-scheduler"
+I0526 21:20:05.237707    1636 manifests.go:157] [control-plane] wrote static Pod manifest for component "kube-scheduler" to "/etc/kubernetes/manifests/kube-scheduler.yaml"
+I0526 21:20:05.237721    1636 kubelet.go:67] Stopping the kubelet
+[kubelet-start] Writing kubelet environment file with flags to file "/var/lib/kubelet/kubeadm-flags.env"
+[kubelet-start] Writing kubelet configuration to file "/var/lib/kubelet/config.yaml"
+[kubelet-start] Starting the kubelet
+I0526 21:20:05.378614    1636 waitcontrolplane.go:83] [wait-control-plane] Waiting for the API server to be healthy
+[wait-control-plane] Waiting for the kubelet to boot up the control plane as static Pods from directory "/etc/kubernetes/manifests". This can take up to 4m0s
+[kubelet-check] Initial timeout of 40s passed.
+
+Unfortunately, an error has occurred:
+	timed out waiting for the condition
+
+This error is likely caused by:
+	- The kubelet is not running
+	- The kubelet is unhealthy due to a misconfiguration of the node in some way (required cgroups disabled)
+
+If you are on a systemd-powered system, you can try to troubleshoot the error with the following commands:
+	- 'systemctl status kubelet'
+	- 'journalctl -xeu kubelet'
+
+Additionally, a control plane component may have crashed or exited when started by the container runtime.
+To troubleshoot, list all containers using your preferred container runtimes CLI.
+Here is one example how you may list all running Kubernetes containers by using crictl:
+	- 'crictl --runtime-endpoint unix:///run/containerd/containerd.sock ps -a | grep kube | grep -v pause'
+	Once you have found the failing container, you can inspect its logs with:
+	- 'crictl --runtime-endpoint unix:///run/containerd/containerd.sock logs CONTAINERID'
+couldn't initialize a Kubernetes cluster
+k8s.io/kubernetes/cmd/kubeadm/app/cmd/phases/init.runWaitControlPlanePhase
+	cmd/kubeadm/app/cmd/phases/init/waitcontrolplane.go:108
+k8s.io/kubernetes/cmd/kubeadm/app/cmd/phases/workflow.(*Runner).Run.func1
+	cmd/kubeadm/app/cmd/phases/workflow/runner.go:259
+k8s.io/kubernetes/cmd/kubeadm/app/cmd/phases/workflow.(*Runner).visitAll
+	cmd/kubeadm/app/cmd/phases/workflow/runner.go:446
+k8s.io/kubernetes/cmd/kubeadm/app/cmd/phases/workflow.(*Runner).Run
+	cmd/kubeadm/app/cmd/phases/workflow/runner.go:232
+k8s.io/kubernetes/cmd/kubeadm/app/cmd.newCmdInit.func1
+	cmd/kubeadm/app/cmd/init.go:111
+github.com/spf13/cobra.(*Command).execute
+	vendor/github.com/spf13/cobra/command.go:940
+github.com/spf13/cobra.(*Command).ExecuteC
+	vendor/github.com/spf13/cobra/command.go:1068
+github.com/spf13/cobra.(*Command).Execute
+	vendor/github.com/spf13/cobra/command.go:992
+k8s.io/kubernetes/cmd/kubeadm/app.Run
+	cmd/kubeadm/app/kubeadm.go:50
+main.main
+	cmd/kubeadm/kubeadm.go:25
+runtime.main
+	/usr/local/go/src/runtime/proc.go:250
+runtime.goexit
+	/usr/local/go/src/runtime/asm_amd64.s:1598
+error execution phase wait-control-plane
+k8s.io/kubernetes/cmd/kubeadm/app/cmd/phases/workflow.(*Runner).Run.func1
+	cmd/kubeadm/app/cmd/phases/workflow/runner.go:260
+k8s.io/kubernetes/cmd/kubeadm/app/cmd/phases/workflow.(*Runner).visitAll
+	cmd/kubeadm/app/cmd/phases/workflow/runner.go:446
+k8s.io/kubernetes/cmd/kubeadm/app/cmd/phases/workflow.(*Runner).Run
+	cmd/kubeadm/app/cmd/phases/workflow/runner.go:232
+k8s.io/kubernetes/cmd/kubeadm/app/cmd.newCmdInit.func1
+	cmd/kubeadm/app/cmd/init.go:111
+github.com/spf13/cobra.(*Command).execute
+	vendor/github.com/spf13/cobra/command.go:940
+github.com/spf13/cobra.(*Command).ExecuteC
+	vendor/github.com/spf13/cobra/command.go:1068
+github.com/spf13/cobra.(*Command).Execute
+	vendor/github.com/spf13/cobra/command.go:992
+k8s.io/kubernetes/cmd/kubeadm/app.Run
+	cmd/kubeadm/app/kubeadm.go:50
+main.main
+	cmd/kubeadm/kubeadm.go:25
+runtime.main
+	/usr/local/go/src/runtime/proc.go:250
+runtime.goexit
+	/usr/local/go/src/runtime/asm_amd64.s:1598
+root@kmaster1:~# 
+```
+I checked the containerd container. It did not create any containers, but it pulled the corresponding image.
+```
+root@kmaster1:~# ctr -n k8s.io c ls 
+CONTAINER    IMAGE    RUNTIME    
+root@kmaster1:~# ctr -n k8s.io i ls 
+REF                                                                                                                                     TYPE                                                      DIGEST                                                                  SIZE      PLATFORMS                                                                     LABELS                          
+registry.aliyuncs.com/google_containers/coredns:v1.10.1                                                                                 application/vnd.docker.distribution.manifest.list.v2+json sha256:90d3eeb2e2108a14fe2ecbef1bc1b5607834335d99c842a377f338aade9da028 15.4 MiB  linux/amd64,linux/arm/v7,linux/arm64,linux/mips64le,linux/ppc64le,linux/s390x io.cri-containerd.image=managed 
+registry.aliyuncs.com/google_containers/coredns@sha256:90d3eeb2e2108a14fe2ecbef1bc1b5607834335d99c842a377f338aade9da028                 application/vnd.docker.distribution.manifest.list.v2+json sha256:90d3eeb2e2108a14fe2ecbef1bc1b5607834335d99c842a377f338aade9da028 15.4 MiB  linux/amd64,linux/arm/v7,linux/arm64,linux/mips64le,linux/ppc64le,linux/s390x io.cri-containerd.image=managed 
+registry.aliyuncs.com/google_containers/etcd:3.5.9-0                                                                                    application/vnd.docker.distribution.manifest.list.v2+json sha256:b124583790d2407fa140c01f42166e3292cc8191ef5d37034fe5a89032081b90 98.1 MiB  linux/amd64,linux/arm/v7,linux/arm64,linux/ppc64le,linux/s390x,windows/amd64  io.cri-containerd.image=managed 
+registry.aliyuncs.com/google_containers/etcd@sha256:b124583790d2407fa140c01f42166e3292cc8191ef5d37034fe5a89032081b90                    application/vnd.docker.distribution.manifest.list.v2+json sha256:b124583790d2407fa140c01f42166e3292cc8191ef5d37034fe5a89032081b90 98.1 MiB  linux/amd64,linux/arm/v7,linux/arm64,linux/ppc64le,linux/s390x,windows/amd64  io.cri-containerd.image=managed 
+registry.aliyuncs.com/google_containers/kube-apiserver:v1.28.0                                                                          application/vnd.docker.distribution.manifest.list.v2+json sha256:42ebad4ff7b72c7aa6988a6d4674f9391a80f2e0ba4bf20d705a1f844ba0a5c3 33.0 MiB  linux/amd64,linux/arm64,linux/ppc64le,linux/s390x                             io.cri-containerd.image=managed 
+registry.aliyuncs.com/google_containers/kube-apiserver@sha256:42ebad4ff7b72c7aa6988a6d4674f9391a80f2e0ba4bf20d705a1f844ba0a5c3          application/vnd.docker.distribution.manifest.list.v2+json sha256:42ebad4ff7b72c7aa6988a6d4674f9391a80f2e0ba4bf20d705a1f844ba0a5c3 33.0 MiB  linux/amd64,linux/arm64,linux/ppc64le,linux/s390x                             io.cri-containerd.image=managed 
+registry.aliyuncs.com/google_containers/kube-controller-manager:v1.28.0                                                                 application/vnd.docker.distribution.manifest.list.v2+json sha256:71da477a3f5ae3be6d6b2d6dd23862036aa30346d0fe7660342a6fb54890232b 31.8 MiB  linux/amd64,linux/arm64,linux/ppc64le,linux/s390x                             io.cri-containerd.image=managed 
+registry.aliyuncs.com/google_containers/kube-controller-manager@sha256:71da477a3f5ae3be6d6b2d6dd23862036aa30346d0fe7660342a6fb54890232b application/vnd.docker.distribution.manifest.list.v2+json sha256:71da477a3f5ae3be6d6b2d6dd23862036aa30346d0fe7660342a6fb54890232b 31.8 MiB  linux/amd64,linux/arm64,linux/ppc64le,linux/s390x                             io.cri-containerd.image=managed 
+registry.aliyuncs.com/google_containers/kube-proxy:v1.28.0                                                                              application/vnd.docker.distribution.manifest.list.v2+json sha256:a61eeb2562dc22fb158f7e00aff4343da2f67b4899a879b76002ce394d94b886 23.4 MiB  linux/amd64,linux/arm64,linux/ppc64le,linux/s390x                             io.cri-containerd.image=managed 
+registry.aliyuncs.com/google_containers/kube-proxy@sha256:a61eeb2562dc22fb158f7e00aff4343da2f67b4899a879b76002ce394d94b886              application/vnd.docker.distribution.manifest.list.v2+json sha256:a61eeb2562dc22fb158f7e00aff4343da2f67b4899a879b76002ce394d94b886 23.4 MiB  linux/amd64,linux/arm64,linux/ppc64le,linux/s390x                             io.cri-containerd.image=managed 
+registry.aliyuncs.com/google_containers/kube-scheduler:v1.28.0                                                                          application/vnd.docker.distribution.manifest.list.v2+json sha256:cd2275aed550dca60fbccb136fdc407a8e9dd045a015762d7a769e4dee36b6c1 17.9 MiB  linux/amd64,linux/arm64,linux/ppc64le,linux/s390x                             io.cri-containerd.image=managed 
+registry.aliyuncs.com/google_containers/kube-scheduler@sha256:cd2275aed550dca60fbccb136fdc407a8e9dd045a015762d7a769e4dee36b6c1          application/vnd.docker.distribution.manifest.list.v2+json sha256:cd2275aed550dca60fbccb136fdc407a8e9dd045a015762d7a769e4dee36b6c1 17.9 MiB  linux/amd64,linux/arm64,linux/ppc64le,linux/s390x                             io.cri-containerd.image=managed 
+registry.aliyuncs.com/google_containers/pause:3.9                                                                                       application/vnd.docker.distribution.manifest.list.v2+json sha256:7031c1b283388d2c2e09b57badb803c05ebed362dc88d84b480cc47f72a21097 314.0 KiB linux/amd64,linux/arm/v7,linux/arm64,linux/ppc64le,linux/s390x,windows/amd64  io.cri-containerd.image=managed 
+registry.aliyuncs.com/google_containers/pause@sha256:7031c1b283388d2c2e09b57badb803c05ebed362dc88d84b480cc47f72a21097                   application/vnd.docker.distribution.manifest.list.v2+json sha256:7031c1b283388d2c2e09b57badb803c05ebed362dc88d84b480cc47f72a21097 314.0 KiB linux/amd64,linux/arm/v7,linux/arm64,linux/ppc64le,linux/s390x,windows/amd64  io.cri-containerd.image=managed 
+sha256:4be79c38a4bab6e1252a35697500e8a0d9c5c7c771d9fcc1935c9a7f6cdf4c62                                                                 application/vnd.docker.distribution.manifest.list.v2+json sha256:71da477a3f5ae3be6d6b2d6dd23862036aa30346d0fe7660342a6fb54890232b 31.8 MiB  linux/amd64,linux/arm64,linux/ppc64le,linux/s390x                             io.cri-containerd.image=managed 
+sha256:73deb9a3f702532592a4167455f8bf2e5f5d900bcc959ba2fd2d35c321de1af9                                                                 application/vnd.docker.distribution.manifest.list.v2+json sha256:b124583790d2407fa140c01f42166e3292cc8191ef5d37034fe5a89032081b90 98.1 MiB  linux/amd64,linux/arm/v7,linux/arm64,linux/ppc64le,linux/s390x,windows/amd64  io.cri-containerd.image=managed 
+sha256:bb5e0dde9054c02d6badee88547be7e7bb7b7b818d277c8a61b4b29484bbff95                                                                 application/vnd.docker.distribution.manifest.list.v2+json sha256:42ebad4ff7b72c7aa6988a6d4674f9391a80f2e0ba4bf20d705a1f844ba0a5c3 33.0 MiB  linux/amd64,linux/arm64,linux/ppc64le,linux/s390x                             io.cri-containerd.image=managed 
+sha256:e6f1816883972d4be47bd48879a08919b96afcd344132622e4d444987919323c                                                                 application/vnd.docker.distribution.manifest.list.v2+json sha256:7031c1b283388d2c2e09b57badb803c05ebed362dc88d84b480cc47f72a21097 314.0 KiB linux/amd64,linux/arm/v7,linux/arm64,linux/ppc64le,linux/s390x,windows/amd64  io.cri-containerd.image=managed 
+sha256:ea1030da44aa18666a7bf15fddd2a38c3143c3277159cb8bdd95f45c8ce62d7a                                                                 application/vnd.docker.distribution.manifest.list.v2+json sha256:a61eeb2562dc22fb158f7e00aff4343da2f67b4899a879b76002ce394d94b886 23.4 MiB  linux/amd64,linux/arm64,linux/ppc64le,linux/s390x                             io.cri-containerd.image=managed 
+sha256:ead0a4a53df89fd173874b46093b6e62d8c72967bbf606d672c9e8c9b601a4fc                                                                 application/vnd.docker.distribution.manifest.list.v2+json sha256:90d3eeb2e2108a14fe2ecbef1bc1b5607834335d99c842a377f338aade9da028 15.4 MiB  linux/amd64,linux/arm/v7,linux/arm64,linux/mips64le,linux/ppc64le,linux/s390x io.cri-containerd.image=managed 
+sha256:f6f496300a2ae7a6727ccf3080d66d2fd22b6cfc271df5351c976c23a28bb157                                                                 application/vnd.docker.distribution.manifest.list.v2+json sha256:cd2275aed550dca60fbccb136fdc407a8e9dd045a015762d7a769e4dee36b6c1 17.9 MiB  linux/amd64,linux/arm64,linux/ppc64le,linux/s390x                             io.cri-containerd.image=managed 
+root@kmaster1:~# 
+```
+my environment information：
+```
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
